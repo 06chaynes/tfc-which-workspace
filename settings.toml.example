@@ -1,0 +1,16 @@
+token = "tfc-access-token" # Required
+org = "org-name" # Required
+output = "production.json" # Optional with default 'results.json'
+
+[query] # Required but can be left empty
+name = "aws-" # Optional
+
+[[query.variables]] # Optional
+key = "mode" # Required
+operator = "Contains" # Required
+value = "prod" # Required
+
+[[query.variables]] # Optional
+key = "status" # Required
+operator = "NotEqual" # Required
+value = "migrating" # Required
