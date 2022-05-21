@@ -25,6 +25,9 @@ pub fn variable(
                             }
                         }
                     }
+                    if !keep {
+                        return keep;
+                    }
                 }
                 Operators::NotEquals => {
                     // Should not be equal.
@@ -38,6 +41,9 @@ pub fn variable(
                                 }
                             }
                         }
+                    }
+                    if !keep {
+                        return keep;
                     }
                 }
                 Operators::Contains => {
@@ -53,6 +59,9 @@ pub fn variable(
                             }
                         }
                     }
+                    if !keep {
+                        return keep;
+                    }
                 }
                 Operators::NotContains => {
                     // Should be a regex hit.
@@ -66,6 +75,9 @@ pub fn variable(
                                 }
                             }
                         }
+                    }
+                    if !keep {
+                        return keep;
                     }
                 }
             }
