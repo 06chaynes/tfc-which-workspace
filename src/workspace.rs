@@ -28,7 +28,7 @@ pub async fn get_workspaces(
         BASE_URL, config.org
     ))?;
     if let Some(name) = config.query.name.clone() {
-        url = Url::parse_with_params(&url.as_str(), &[("search[name]", name)])?
+        url = Url::parse_with_params(url.as_str(), &[("search[name]", name)])?
     }
     let req = RequestBuilder::new(Method::Get, url)
         .header("Authorization", &format!("Bearer {}", config.token))
