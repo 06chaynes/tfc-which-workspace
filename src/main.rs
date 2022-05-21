@@ -10,6 +10,7 @@ use http_cache_surf::{
 use miette::{IntoDiagnostic, WrapErr};
 use serde::{Deserialize, Serialize};
 use settings::Settings;
+use std::fs::File;
 use surf::Client;
 use workspace::Workspace;
 
@@ -86,7 +87,13 @@ async fn main() -> miette::Result<()> {
             query: config.query.clone(),
             result: FilteredResultInner { workspaces: filtered_workspaces },
         };
-        println!("{:#?}", res);
+        println!("{:#?}", &res);
+        serde_json::to_writer(
+            &File::create(&config.output).into_diagnostic()?,
+            &res,
+        )
+        .into_diagnostic()
+        .wrap_err("Bleh, I ran into an issue saving the output!")?;
     }
     Ok(())
 }
