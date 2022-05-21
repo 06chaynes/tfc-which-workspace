@@ -88,7 +88,7 @@ async fn main() -> miette::Result<()> {
             result: FilteredResultInner { workspaces: filtered_workspaces },
         };
         println!("{:#?}", &res);
-        serde_json::to_writer(
+        serde_json::to_writer_pretty(
             &File::create(&config.output).into_diagnostic()?,
             &res,
         )
