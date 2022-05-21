@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+[[bin]]
+name = "which-workspace"
+path = "src/main.rs"
+
 [dependencies]
 anyhow = "1.0.57"
 async-std = { version = "1.11.0", features = ["attributes"] }

@@ -38,9 +38,9 @@ impl Settings {
             .set_default("log", "warn".to_string())?
             // Start off by merging in the "default" configuration file
             .add_source(File::with_name("settings.toml").required(false))
-            // Add in settings from the environment (with a prefix of APP)
-            // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
-            .add_source(Environment::with_prefix("app"))
+            // Add in settings from the environment
+            // Eg.. `DEBUG=1 ./target/app` would set the `debug` key
+            .add_source(Environment::default()?)
             .build()?;
         s.try_deserialize()
     }
