@@ -28,6 +28,7 @@ pub struct Settings {
     pub log: String,
     pub token: String,
     pub org: String,
+    pub output: String,
     pub query: Query,
 }
 
@@ -36,11 +37,12 @@ impl Settings {
         let s = Config::builder()
             // Set defaults
             .set_default("log", "warn".to_string())?
+            .set_default("output", "results.json".to_string())?
             // Start off by merging in the "default" configuration file
             .add_source(File::with_name("settings.toml").required(false))
             // Add in settings from the environment
             // Eg.. `DEBUG=1 ./target/app` would set the `debug` key
-            .add_source(Environment::default()?)
+            .add_source(Environment::default())
             .build()?;
         s.try_deserialize()
     }

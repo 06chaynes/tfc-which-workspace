@@ -2046,7 +2046,6 @@ dependencies = [
  "config",
  "http-cache-surf",
  "miette",
- "regex",
  "serde",
  "serde_json",
  "surf",
