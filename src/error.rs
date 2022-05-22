@@ -22,4 +22,11 @@ pub enum FilterError {
         help("Aw snap, ran into an issue parsing the json response!")
     )]
     Json(#[from] serde_json::Error),
+    /// Integer parsing related errors
+    #[error(transparent)]
+    #[diagnostic(
+        code(which_workspace::int),
+        help("Aw snap, ran into an issue parsing an integer!")
+    )]
+    Int(#[from] std::num::ParseIntError),
 }

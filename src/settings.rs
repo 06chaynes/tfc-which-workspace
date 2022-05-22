@@ -18,6 +18,13 @@ pub struct Variable {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Pagination {
+    pub start_page: String,
+    pub max_depth: String,
+    pub page_size: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Query {
     pub name: Option<String>,
     pub variables: Option<Vec<Variable>>,
@@ -30,6 +37,7 @@ pub struct Settings {
     pub org: String,
     pub output: String,
     pub query: Query,
+    pub pagination: Pagination,
 }
 
 impl Settings {
@@ -38,6 +46,9 @@ impl Settings {
             // Set defaults
             .set_default("log", "warn".to_string())?
             .set_default("output", "results.json".to_string())?
+            .set_default("pagination.start_page", "1".to_string())?
+            .set_default("pagination.max_depth", "1".to_string())?
+            .set_default("pagination.page_size", "20".to_string())?
             // Start off by merging in the "default" configuration file
             .add_source(File::with_name("settings.toml").required(false))
             // Add in settings from the environment
