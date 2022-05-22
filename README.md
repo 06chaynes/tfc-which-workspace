@@ -8,7 +8,7 @@ Currently the only provided filter is for variable based filtering. If one or mo
 
 After the filter logic has completed the resulting dataset will be outputted both to the terminal and to a file. By default the file name will be `result.json` and it will be placed in the working directory in which the tool was run.
 
-Settings can be provided by either providing a `settings.toml` file or by passing ENV variables along before the command.
+Settings can be provided by either providing a `settings.toml` file or by passing ENV variables along before the command. Caching is leveraged on all remote calls (following http caching rules) and will create a directory in the working directory in which the tool was run named `http-cacache` where the cache files will reside.
 
 ## Why tho?
 
