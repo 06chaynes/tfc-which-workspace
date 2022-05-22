@@ -58,16 +58,13 @@ pub async fn get_workspaces(
     let req = RequestBuilder::new(Method::Get, url.clone())
         .header("Authorization", &format!("Bearer {}", config.token))
         .build();
-    let mut workspace_list: WorkspacesResponseOuter;
-    match client.recv_string(req).await {
-        Ok(s) => {
-            workspace_list =
-                serde_json::from_str::<WorkspacesResponseOuter>(&s)?;
-        }
-        Err(e) => {
-            return Err(FilterError::General(e.into_inner()));
-        }
-    }
+    let mut workspace_list: WorkspacesResponseOuter =
+        match client.recv_string(req).await {
+            Ok(s) => serde_json::from_str::<WorkspacesResponseOuter>(&s)?,
+            Err(e) => {
+                return Err(FilterError::General(e.into_inner()));
+            }
+        };
     // Need to check pagination
     if let Some(meta) = workspace_list.meta {
         let max_depth = config.pagination.max_depth.parse::<u32>()?;
@@ -75,19 +72,19 @@ pub async fn get_workspaces(
             let current_depth: u32 = 1;
             if let Some(next_page) = meta.pagination.next_page {
                 if max_depth == 0 || current_depth < max_depth {
-                    let num_pages: u32;
-                    if max_depth == 0 {
-                        num_pages = meta.pagination.total_pages;
-                    } else if max_depth >= meta.pagination.total_pages {
-                        num_pages = meta.pagination.total_pages;
+                    let num_pages: u32 = if max_depth
+                        >= meta.pagination.total_pages
+                        || max_depth == 0
+                    {
+                        meta.pagination.total_pages
                     } else {
-                        num_pages = max_depth - 1;
-                    }
+                        max_depth - 1
+                    };
 
                     // Get the next page and merge the result
                     for n in next_page..=num_pages {
                         url = Url::parse_with_params(
-                            url.as_str().clone(),
+                            url.clone().as_str(),
                             &[("page[number]", &n.to_string())],
                         )?;
                         let req = RequestBuilder::new(Method::Get, url.clone())
