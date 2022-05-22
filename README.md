@@ -2,7 +2,7 @@
 
 ## What is this?
 
-This tool is for searching for workspaces in Terraform Cloud. It first attempts to pull a list of workspaces for the specified organization, a can optionally accept a name parameter to filter the initial list. After the list of workspaces has been retrieved the tool can then attempt to further filter the list based on the provided query parameters.
+This tool is for searching for workspaces in Terraform Cloud. It first attempts to pull a list of workspaces for the specified organization, it can optionally accept a name parameter to filter the initial list. After the list of workspaces has been retrieved the tool can then attempt to further filter the list based on the provided query parameters.
 
 Currently the only provided filter is for variable based filtering. If one or more variable filters have been provided the tool will attempt to work through the passed filter rules. For each workspace in the list an additional call will be made to pull the variables for that workspace. After that data has been gathered it will then run through the variable filter logic. See [Variable Filters](#variable-filters) for more details.
 
