@@ -58,8 +58,7 @@ pub async fn get_workspaces(
     let req = RequestBuilder::new(Method::Get, url.clone())
         .header("Authorization", &format!("Bearer {}", config.token))
         .build();
-    let mut workspace_list =
-        WorkspacesResponseOuter { data: vec![], meta: None };
+    let mut workspace_list: WorkspacesResponseOuter;
     match client.recv_string(req).await {
         Ok(s) => {
             workspace_list =
