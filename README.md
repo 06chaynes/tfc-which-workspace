@@ -52,4 +52,4 @@ Currently the available "operators" are:
   
 ## Notes
 
-Rate limiting hasn't been implemented yet so be aware, see [Terraform Docs](https://www.terraform.io/cloud-docs/api-docs#rate-limiting) for information on those limits. Pagination has been implemented but take special care of setting `max_depth` = `0` to pull all pages as this could result in a large number of calls. There are also probably some bugs so use at your own risk!
+Rate limiting has been implemented but no retry logic has been added so hitting the limit could result in an error. A maximum rate of 30 requests per second has been set, see [Terraform Docs](https://www.terraform.io/cloud-docs/api-docs#rate-limiting) for information on that limit. Pagination has been implemented but take special care of setting `max_depth` = `0` to pull all pages as this could result in a large number of calls. There are also probably some bugs so use at your own risk!
