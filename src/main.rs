@@ -4,6 +4,7 @@ mod settings;
 mod variable;
 mod workspace;
 
+use error::FilterError;
 use http_cache_surf::{
     CACacheManager, Cache, CacheMode, CacheOptions, HttpCache,
 };
@@ -12,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use settings::Settings;
 use std::fs::File;
 use surf::Client;
+use surf_governor::GovernorMiddleware;
 use workspace::Workspace;
 
 const BASE_URL: &str = "https://app.terraform.io/api/v2";
@@ -36,6 +38,13 @@ pub struct WorkspaceVariables {
     pub variables: Vec<variable::Variable>,
 }
 
+fn build_governor() -> Result<GovernorMiddleware, FilterError> {
+    match GovernorMiddleware::per_second(30) {
+        Ok(g) => Ok(g),
+        Err(e) => Err(FilterError::General(e.into_inner())),
+    }
+}
+
 #[async_std::main]
 async fn main() -> miette::Result<()> {
     // Get the settings for the run
@@ -43,17 +52,19 @@ async fn main() -> miette::Result<()> {
         .into_diagnostic()
         .wrap_err("Uh Oh, looks like a settings issue! By default I look for a settings.toml file and override with env variables.")?;
 
-    // Build the http client with a cache enabled
-    let client = Client::new().with(Cache(HttpCache {
-        mode: CacheMode::Default,
-        manager: CACacheManager::default(),
-        options: Some(CacheOptions {
-            shared: false,
-            cache_heuristic: 0.0,
-            immutable_min_time_to_live: Default::default(),
-            ignore_cargo_cult: false,
+    // Build the http client with a cache and governor enabled
+    let client = Client::new().with(build_governor().into_diagnostic()?).with(
+        Cache(HttpCache {
+            mode: CacheMode::Default,
+            manager: CACacheManager::default(),
+            options: Some(CacheOptions {
+                shared: false,
+                cache_heuristic: 0.0,
+                immutable_min_time_to_live: Default::default(),
+                ignore_cargo_cult: false,
+            }),
         }),
-    }));
+    );
 
     // Get the workspaces
     let workspaces = workspace::get_workspaces(&config, client.clone())
